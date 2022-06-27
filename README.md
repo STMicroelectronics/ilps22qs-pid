@@ -5,7 +5,7 @@ Sensor driver for ILPS22QS sensor written in C programming language. This reposi
 In order to `clone` the complete content of the repository folder, use the command:
 
 ```
-git clone https://github.com/STMicroelectronics/ILPS22QS/
+git clone https://github.com/STMicroelectronics/ILPS22QS-PID/
 ```
 
 Some examples of driver usage can be found [here](https://github.com/STMicroelectronics/STMems_Standard_C_drivers).
