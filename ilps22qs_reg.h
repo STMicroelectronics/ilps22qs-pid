@@ -286,13 +286,17 @@ typedef struct
 typedef struct
 {
 #if DRV_BYTE_ORDER == DRV_LITTLE_ENDIAN
-  uint8_t if_add_inc       : 1;
-  uint8_t not_used_01      : 6;
-  uint8_t ah_qvar_en       : 1;
+  uint8_t if_add_inc             : 1;
+  uint8_t not_used_01            : 4;
+  uint8_t ah_qvar_p_auto_en      : 1;
+  uint8_t not_used_02            : 1;
+  uint8_t ah_qvar_en             : 1;
 #elif DRV_BYTE_ORDER == DRV_BIG_ENDIAN
-  uint8_t ah_qvar_en       : 1;
-  uint8_t not_used_01      : 6;
-  uint8_t if_add_inc       : 1;
+  uint8_t ah_qvar_en             : 1;
+  uint8_t not_used_02            : 1;
+  uint8_t ah_qvar_p_auto_en      : 1;
+  uint8_t not_used_01            : 4;
+  uint8_t if_add_inc             : 1;
 #endif /* DRV_BYTE_ORDER */
 } ilps22qs_ctrl_reg3_t;
 
@@ -300,15 +304,17 @@ typedef struct
 typedef struct
 {
 #if DRV_BYTE_ORDER == DRV_LITTLE_ENDIAN
-  uint8_t f_mode           : 2;
-  uint8_t trig_modes       : 1;
-  uint8_t stop_on_wtm      : 1;
-  uint8_t not_used_01      : 4;
+  uint8_t f_mode                 : 2;
+  uint8_t trig_modes             : 1;
+  uint8_t stop_on_wtm            : 1;
+  uint8_t ah_qvar_p_fifo_en      : 1;
+  uint8_t not_used_01            : 3;
 #elif DRV_BYTE_ORDER == DRV_BIG_ENDIAN
-  uint8_t not_used_01      : 4;
-  uint8_t stop_on_wtm      : 1;
-  uint8_t trig_modes       : 1;
-  uint8_t f_mode           : 2;
+  uint8_t not_used_01            : 3;
+  uint8_t ah_qvar_p_fifo_en      : 1;
+  uint8_t stop_on_wtm            : 1;
+  uint8_t trig_modes             : 1;
+  uint8_t f_mode                 : 2;
 #endif /* DRV_BYTE_ORDER */
 } ilps22qs_fifo_ctrl_t;
 
@@ -582,6 +588,7 @@ typedef struct
     ILPS22QS_LPF_ODR_DIV_4 = 1,
     ILPS22QS_LPF_ODR_DIV_9 = 3,
   } lpf;
+  uint8_t interleaved_mode;
 } ilps22qs_md_t;
 int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val);
 int32_t ilps22qs_mode_get(stmdev_ctx_t *ctx, ilps22qs_md_t *val);
@@ -600,6 +607,10 @@ typedef struct
     float_t deg_c;
     int16_t raw;
   } heat;
+  struct
+  {
+    int32_t lsb; /* 24 bit properly right aligned */
+  } ah_qvar;
 } ilps22qs_data_t;
 int32_t ilps22qs_data_get(stmdev_ctx_t *ctx, ilps22qs_md_t *md,
                           ilps22qs_data_t *data);
@@ -622,7 +633,7 @@ typedef struct
     ILPS22QS_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
     ILPS22QS_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
   } operation;
-  uint8_t watermark; /* (0 disable) max 128.*/
+  uint8_t watermark : 7; /* (0 disable) max 128.*/
 } ilps22qs_fifo_md_t;
 int32_t ilps22qs_fifo_mode_set(stmdev_ctx_t *ctx, ilps22qs_fifo_md_t *val);
 int32_t ilps22qs_fifo_mode_get(stmdev_ctx_t *ctx, ilps22qs_fifo_md_t *val);
@@ -632,6 +643,7 @@ int32_t ilps22qs_fifo_level_get(stmdev_ctx_t *ctx, uint8_t *val);
 typedef struct
 {
   float_t hpa;
+  int32_t lsb; /* 24 bit properly right aligned */
   int32_t raw;
 } ilps22qs_fifo_data_t;
 int32_t ilps22qs_fifo_data_get(stmdev_ctx_t *ctx, uint8_t samp,

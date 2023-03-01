@@ -431,15 +431,57 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
 {
   ilps22qs_ctrl_reg1_t ctrl_reg1;
   ilps22qs_ctrl_reg2_t ctrl_reg2;
-  uint8_t reg[2];
+  ilps22qs_ctrl_reg3_t ctrl_reg3;
+  ilps22qs_fifo_ctrl_t fifo_ctrl;
+  uint8_t odr_save, ah_qvar_en_save;
+  uint8_t reg[3];
   int32_t ret;
 
-  ret = ilps22qs_read_reg(ctx, ILPS22QS_CTRL_REG1, reg, 2);
+  ret = ilps22qs_read_reg(ctx, ILPS22QS_CTRL_REG1, reg, 3);
 
   if (ret == 0)
   {
     bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
     bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
+    bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
+
+    /* handle interleaved mode setting */
+    if (ctrl_reg1.odr != ILPS22QS_ONE_SHOT)
+    {
+      /* power-down */
+      odr_save = ctrl_reg1.odr;
+      ctrl_reg1.odr = ILPS22QS_ONE_SHOT;
+      ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
+    }
+
+    if (ctrl_reg3.ah_qvar_en != 0)
+    {
+      /* disable QVAR */
+      ah_qvar_en_save = ctrl_reg3.ah_qvar_en;
+      ctrl_reg3.ah_qvar_en = 0;
+      ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+    }
+
+    /* set interleaved mode (0 or 1) */
+    ctrl_reg3.ah_qvar_p_auto_en = val->interleaved_mode;
+    ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+
+    /* set FIFO interleaved mode (0 or 1) */
+    ret += ilps22qs_read_reg(ctx, ILPS22QS_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+    fifo_ctrl.ah_qvar_p_fifo_en = val->interleaved_mode;
+    ret += ilps22qs_write_reg(ctx, ILPS22QS_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+
+    if (ah_qvar_en_save != 0)
+    {
+      /* restore ah_qvar_en back to previous setting */
+      ctrl_reg3.ah_qvar_en = ah_qvar_en_save;
+    }
+
+    if (odr_save != 0)
+    {
+      /* restore odr back to previous setting */
+      ctrl_reg1.odr = odr_save;
+    }
 
     ctrl_reg1.odr = (uint8_t)val->odr;
     ctrl_reg1.avg = (uint8_t)val->avg;
@@ -449,7 +491,8 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
 
     bytecpy(&reg[0], (uint8_t *)&ctrl_reg1);
     bytecpy(&reg[1], (uint8_t *)&ctrl_reg2);
-    ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, reg, 2);
+    bytecpy(&reg[2], (uint8_t *)&ctrl_reg3);
+    ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, reg, 3);
   }
 
   return ret;
@@ -467,15 +510,17 @@ int32_t ilps22qs_mode_get(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
 {
   ilps22qs_ctrl_reg1_t ctrl_reg1;
   ilps22qs_ctrl_reg2_t ctrl_reg2;
-  uint8_t reg[2];
+  ilps22qs_ctrl_reg3_t ctrl_reg3;
+  uint8_t reg[3];
   int32_t ret;
 
-  ret = ilps22qs_read_reg(ctx, ILPS22QS_CTRL_REG1, reg, 2);
+  ret = ilps22qs_read_reg(ctx, ILPS22QS_CTRL_REG1, reg, 3);
 
   if (ret == 0)
   {
     bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
     bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
+    bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
 
     switch (ctrl_reg2.fs_mode)
     {
@@ -570,6 +615,8 @@ int32_t ilps22qs_mode_get(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
         val->lpf = ILPS22QS_LPF_DISABLE;
         break;
     }
+
+    val->interleaved_mode = ctrl_reg3.ah_qvar_p_auto_en;
   }
   return ret;
 }
@@ -665,8 +712,32 @@ int32_t ilps22qs_data_get(stmdev_ctx_t *ctx, ilps22qs_md_t *md,
   data->pressure.raw = (data->pressure.raw * 256) + (int32_t) buff[0];
   data->pressure.raw = data->pressure.raw * 256;
 
-  switch (md->fs)
+  if (md->interleaved_mode == 1)
   {
+    if ((buff[0] & 0x1) == 0)
+    {
+      /* data is a pressure sample */
+      switch (md->fs)
+      {
+      case ILPS22QS_1260hPa:
+        data->pressure.hpa = ilps22qs_from_fs1260_to_hPa(data->pressure.raw);
+        break;
+      case ILPS22QS_4060hPa:
+        data->pressure.hpa = ilps22qs_from_fs4000_to_hPa(data->pressure.raw);
+        break;
+      default:
+        data->pressure.hpa = 0.0f;
+        break;
+      }
+      data->ah_qvar.lsb = 0;
+    } else {
+      /* data is a AH_QVAR sample */
+      data->ah_qvar.lsb = (data->pressure.raw / 256); /* shift 8bit left */
+      data->pressure.hpa = 0.0f;
+    }
+  } else {
+    switch (md->fs)
+    {
     case ILPS22QS_1260hPa:
       data->pressure.hpa = ilps22qs_from_fs1260_to_hPa(data->pressure.raw);
       break;
@@ -676,6 +747,8 @@ int32_t ilps22qs_data_get(stmdev_ctx_t *ctx, ilps22qs_md_t *md,
     default:
       data->pressure.hpa = 0.0f;
       break;
+    }
+    data->ah_qvar.lsb = 0;
   }
 
   /* temperature conversion */
@@ -867,17 +940,43 @@ int32_t ilps22qs_fifo_data_get(stmdev_ctx_t *ctx, uint8_t samp,
     data[i].raw = (data[i].raw * 256) + (int32_t)fifo_data[0];
     data[i].raw = (data[i].raw * 256);
 
-    switch (md->fs)
+    if (md->interleaved_mode == 1)
     {
-      case ILPS22QS_1260hPa:
-        data[i].hpa = ilps22qs_from_fs1260_to_hPa(data[i].raw);
-        break;
-      case ILPS22QS_4060hPa:
-        data[i].hpa = ilps22qs_from_fs4000_to_hPa(data[i].raw);
-        break;
-      default:
+      if ((fifo_data[0] & 0x1) == 0)
+      {
+        /* data is a pressure sample */
+        switch (md->fs)
+        {
+          case ILPS22QS_1260hPa:
+            data[i].hpa = ilps22qs_from_fs1260_to_hPa(data[i].raw);
+            break;
+          case ILPS22QS_4060hPa:
+            data[i].hpa = ilps22qs_from_fs4000_to_hPa(data[i].raw);
+            break;
+          default:
+            data[i].hpa = 0.0f;
+            break;
+        }
+        data[i].lsb = 0;
+      } else {
+        /* data is a AH_QVAR sample */
+        data[i].lsb = (data[i].raw / 256); /* shift 8bit left */
         data[i].hpa = 0.0f;
-        break;
+      }
+    } else {
+        switch (md->fs)
+        {
+          case ILPS22QS_1260hPa:
+            data[i].hpa = ilps22qs_from_fs1260_to_hPa(data[i].raw);
+            break;
+          case ILPS22QS_4060hPa:
+            data[i].hpa = ilps22qs_from_fs4000_to_hPa(data[i].raw);
+            break;
+          default:
+            data[i].hpa = 0.0f;
+            break;
+        }
+        data[i].lsb = 0;
     }
 
   }
