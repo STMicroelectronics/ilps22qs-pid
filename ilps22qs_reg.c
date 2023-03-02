@@ -161,7 +161,7 @@ int32_t ilps22qs_id_get(stmdev_ctx_t *ctx, ilps22qs_id_t *val)
   */
 int32_t ilps22qs_bus_mode_set(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
 {
-  ilps22qs_i3c_if_ctrl_add_t i3c_if_ctrl_add;
+  ilps22qs_i3c_if_ctrl_t i3c_if_ctrl;
   ilps22qs_if_ctrl_t if_ctrl;
   int32_t ret;
 
@@ -174,14 +174,14 @@ int32_t ilps22qs_bus_mode_set(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
   }
   if (ret == 0)
   {
-    ret = ilps22qs_read_reg(ctx, ILPS22QS_I3C_IF_CTRL_ADD,
-                            (uint8_t *)&i3c_if_ctrl_add, 1);
+    ret = ilps22qs_read_reg(ctx, ILPS22QS_I3C_IF_CTRL,
+                            (uint8_t *)&i3c_if_ctrl, 1);
   }
   if (ret == 0)
   {
-    i3c_if_ctrl_add.asf_on = (uint8_t)val->filter & 0x01U;
-    ret = ilps22qs_write_reg(ctx, ILPS22QS_I3C_IF_CTRL_ADD,
-                             (uint8_t *)&i3c_if_ctrl_add, 1);
+    i3c_if_ctrl.asf_on = (uint8_t)val->filter & 0x01U;
+    ret = ilps22qs_write_reg(ctx, ILPS22QS_I3C_IF_CTRL,
+                             (uint8_t *)&i3c_if_ctrl, 1);
   }
   return ret;
 }
@@ -196,15 +196,15 @@ int32_t ilps22qs_bus_mode_set(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
   */
 int32_t ilps22qs_bus_mode_get(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
 {
-  ilps22qs_i3c_if_ctrl_add_t i3c_if_ctrl_add;
+  ilps22qs_i3c_if_ctrl_t i3c_if_ctrl;
   ilps22qs_if_ctrl_t if_ctrl;
   int32_t ret;
 
   ret = ilps22qs_read_reg(ctx, ILPS22QS_IF_CTRL, (uint8_t *)&if_ctrl, 1);
   if (ret == 0)
   {
-    ret = ilps22qs_read_reg(ctx, ILPS22QS_I3C_IF_CTRL_ADD,
-                            (uint8_t *)&i3c_if_ctrl_add, 1);
+    ret = ilps22qs_read_reg(ctx, ILPS22QS_I3C_IF_CTRL,
+                            (uint8_t *)&i3c_if_ctrl, 1);
 
     switch (if_ctrl.i2c_i3c_dis << 1)
     {
@@ -222,7 +222,7 @@ int32_t ilps22qs_bus_mode_get(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
         break;
     }
 
-    switch (i3c_if_ctrl_add.asf_on)
+    switch (i3c_if_ctrl.asf_on)
     {
       case ILPS22QS_AUTO:
         val->filter = ILPS22QS_AUTO;

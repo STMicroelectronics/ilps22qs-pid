@@ -342,7 +342,7 @@ typedef struct
   uint8_t refp             : 8;
 } ilps22qs_ref_p_h_t;
 
-#define ILPS22QS_I3C_IF_CTRL_ADD         0x19U
+#define ILPS22QS_I3C_IF_CTRL             0x19U
 typedef struct
 {
 #if DRV_BYTE_ORDER == DRV_LITTLE_ENDIAN
@@ -354,7 +354,7 @@ typedef struct
   uint8_t asf_on           : 1;
   uint8_t not_used_02      : 5;
 #endif /* DRV_BYTE_ORDER */
-} ilps22qs_i3c_if_ctrl_add_t;
+} ilps22qs_i3c_if_ctrl_t;
 
 #define ILPS22QS_RPDS_L                  0x1AU
 #define ILPS22QS_RPDS_H                  0x1BU
@@ -454,7 +454,7 @@ typedef union
   ilps22qs_fifo_wtm_t         fifo_wtm;
   ilps22qs_ref_p_l_t          ref_p_l;
   ilps22qs_ref_p_h_t          ref_p_h;
-  ilps22qs_i3c_if_ctrl_add_t  i3c_if_ctrl_add;
+  ilps22qs_i3c_if_ctrl_t      i3c_if_ctrl;
   ilps22qs_int_source_t       int_source;
   ilps22qs_fifo_status1_t     fifo_status1;
   ilps22qs_fifo_status2_t     fifo_status2;
