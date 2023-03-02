@@ -333,13 +333,13 @@ typedef struct
 #define ILPS22QS_REF_P_L                 0x16U
 typedef struct
 {
-  uint8_t refl             : 8;
+  uint8_t refp             : 8;
 } ilps22qs_ref_p_l_t;
 
 #define ILPS22QS_REF_P_H                 0x17U
 typedef struct
 {
-  uint8_t refl             : 8;
+  uint8_t refp             : 8;
 } ilps22qs_ref_p_h_t;
 
 #define ILPS22QS_I3C_IF_CTRL_ADD         0x19U
