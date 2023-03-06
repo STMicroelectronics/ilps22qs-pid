@@ -433,7 +433,7 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
   ilps22qs_ctrl_reg2_t ctrl_reg2;
   ilps22qs_ctrl_reg3_t ctrl_reg3;
   ilps22qs_fifo_ctrl_t fifo_ctrl;
-  uint8_t odr_save, ah_qvar_en_save;
+  uint8_t odr_save = 0, ah_qvar_en_save = 0;
   uint8_t reg[3];
   int32_t ret;
 
@@ -446,15 +446,15 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
     bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
 
     /* handle interleaved mode setting */
-    if (ctrl_reg1.odr != ILPS22QS_ONE_SHOT)
+    if (ctrl_reg1.odr != 0x0U)
     {
       /* power-down */
       odr_save = ctrl_reg1.odr;
-      ctrl_reg1.odr = ILPS22QS_ONE_SHOT;
+      ctrl_reg1.odr = 0x0U;
       ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
     }
 
-    if (ctrl_reg3.ah_qvar_en != 0)
+    if (ctrl_reg3.ah_qvar_en != 0U)
     {
       /* disable QVAR */
       ah_qvar_en_save = ctrl_reg3.ah_qvar_en;
@@ -471,13 +471,13 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
     fifo_ctrl.ah_qvar_p_fifo_en = val->interleaved_mode;
     ret += ilps22qs_write_reg(ctx, ILPS22QS_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
 
-    if (ah_qvar_en_save != 0)
+    if (ah_qvar_en_save != 0U)
     {
       /* restore ah_qvar_en back to previous setting */
       ctrl_reg3.ah_qvar_en = ah_qvar_en_save;
     }
 
-    if (odr_save != 0)
+    if (odr_save != 0U)
     {
       /* restore odr back to previous setting */
       ctrl_reg1.odr = odr_save;
@@ -492,7 +492,7 @@ int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val)
     bytecpy(&reg[0], (uint8_t *)&ctrl_reg1);
     bytecpy(&reg[1], (uint8_t *)&ctrl_reg2);
     bytecpy(&reg[2], (uint8_t *)&ctrl_reg3);
-    ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, reg, 3);
+    ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG1, reg, 3);
   }
 
   return ret;
@@ -712,9 +712,9 @@ int32_t ilps22qs_data_get(stmdev_ctx_t *ctx, ilps22qs_md_t *md,
   data->pressure.raw = (data->pressure.raw * 256) + (int32_t) buff[0];
   data->pressure.raw = data->pressure.raw * 256;
 
-  if (md->interleaved_mode == 1)
+  if (md->interleaved_mode == 1U)
   {
-    if ((buff[0] & 0x1) == 0)
+    if ((buff[0] & 0x1U) == 0U)
     {
       /* data is a pressure sample */
       switch (md->fs)
@@ -940,9 +940,9 @@ int32_t ilps22qs_fifo_data_get(stmdev_ctx_t *ctx, uint8_t samp,
     data[i].raw = (data[i].raw * 256) + (int32_t)fifo_data[0];
     data[i].raw = (data[i].raw * 256);
 
-    if (md->interleaved_mode == 1)
+    if (md->interleaved_mode == 1U)
     {
-      if ((fifo_data[0] & 0x1) == 0)
+      if ((fifo_data[0] & 0x1U) == 0U)
       {
         /* data is a pressure sample */
         switch (md->fs)
