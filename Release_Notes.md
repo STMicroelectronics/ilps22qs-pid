@@ -32,7 +32,7 @@ This directory contains the ILPS22QS component drivers.
 ::: {.collapse}
 <input type="checkbox" id="collapse-section1" aria-hidden="true">
 <label for="collapse-section1" aria-hidden="true">V1.0.0 / 30-March-2022</label>
-<div>			
+<div>
 
 ## Main changes
 
@@ -44,15 +44,27 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true">
-<label for="collapse-section1" aria-hidden="true">V2.0.0 / 1-March-2023</label>
-<div>			
+<input type="checkbox" id="collapse-section2" aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V2.0.0 / 1-March-2023</label>
+<div>
 
 ## Main changes
 
-### First release
-
 - Align driver to DS v3.0 (support interleaved mode)
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section3" checked aria-hidden="true">
+<label for="collapse-section3" aria-hidden="true">V2.1.0 / 01-June-2023</label>
+<div>
+
+## Main changes
+
+- Fix MISRA errors
+- ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name
+- ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs
 
 ##
 
