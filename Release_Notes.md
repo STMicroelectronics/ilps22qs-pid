@@ -56,7 +56,7 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section3" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
 <label for="collapse-section3" aria-hidden="true">V2.1.0 / 01-June-2023</label>
 <div>
 
@@ -65,6 +65,18 @@ This directory contains the ILPS22QS component drivers.
 - Fix MISRA errors
 - ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name
 - ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V2.1.1 / 26-July-2023</label>
+<div>
+
+## Main changes
+
+- ah_qvar: Add API to convert from LSB to mV
 
 ##
 
