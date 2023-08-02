@@ -494,19 +494,23 @@ typedef struct
 } ilps22qs_id_t;
 int32_t ilps22qs_id_get(stmdev_ctx_t *ctx, ilps22qs_id_t *val);
 
+typedef enum
+{
+  ILPS22QS_SEL_BY_HW      = 0x00, /* bus mode select by HW (SPI 3W disable) */
+  ILPS22QS_SPI_3W         = 0x03, /* bus mode select by HW (SPI 3W disable) */
+  ILPS22QS_SPI_4W         = 0x02, /* bus mode select by HW (SPI 3W disable) */
+} ilps22qs_interface_t;
+
+typedef enum
+{
+  ILPS22QS_AUTO      = 0x00, /* bus mode select by HW (SPI 3W disable) */
+  ILPS22QS_ALWAYS_ON = 0x01, /* Only SPI: SDO / SDI separated pins */
+} ilps22qs_filter_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS22QS_SEL_BY_HW      = 0x00, /* bus mode select by HW (SPI 3W disable) */
-    ILPS22QS_SPI_3W         = 0x03, /* bus mode select by HW (SPI 3W disable) */
-    ILPS22QS_SPI_4W         = 0x02, /* bus mode select by HW (SPI 3W disable) */
-  } interface;
-  enum
-  {
-    ILPS22QS_AUTO      = 0x00, /* bus mode select by HW (SPI 3W disable) */
-    ILPS22QS_ALWAYS_ON = 0x01, /* Only SPI: SDO / SDI separated pins */
-  } filter;
+  ilps22qs_interface_t interface;
+  ilps22qs_filter_t filter;
 } ilps22qs_bus_mode_t;
 int32_t ilps22qs_bus_mode_set(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val);
 int32_t ilps22qs_bus_mode_get(stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val);
@@ -554,42 +558,50 @@ typedef struct
 int32_t ilps22qs_all_sources_get(stmdev_ctx_t *ctx,
                                  ilps22qs_all_sources_t *val);
 
+typedef enum
+{
+  ILPS22QS_1260hPa = 0x00,
+  ILPS22QS_4060hPa = 0x01,
+} ilps22qs_fs_t;
+
+typedef enum
+{
+  ILPS22QS_ONE_SHOT = 0x00, /* Device in power down till software trigger */
+  ILPS22QS_1Hz      = 0x01,
+  ILPS22QS_4Hz      = 0x02,
+  ILPS22QS_10Hz     = 0x03,
+  ILPS22QS_25Hz     = 0x04,
+  ILPS22QS_50Hz     = 0x05,
+  ILPS22QS_75Hz     = 0x06,
+  ILPS22QS_100Hz    = 0x07,
+  ILPS22QS_200Hz    = 0x08,
+} ilps22qs_odr_t;
+
+typedef enum
+{
+  ILPS22QS_4_AVG   = 0,
+  ILPS22QS_8_AVG   = 1,
+  ILPS22QS_16_AVG  = 2,
+  ILPS22QS_32_AVG  = 3,
+  ILPS22QS_64_AVG  = 4,
+  ILPS22QS_128_AVG = 5,
+  ILPS22QS_256_AVG = 6,
+  ILPS22QS_512_AVG = 7,
+} ilps22qs_avg_t;
+
+typedef enum
+{
+  ILPS22QS_LPF_DISABLE   = 0,
+  ILPS22QS_LPF_ODR_DIV_4 = 1,
+  ILPS22QS_LPF_ODR_DIV_9 = 3,
+} ilps22qs_lpf_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS22QS_1260hPa = 0x00,
-    ILPS22QS_4060hPa = 0x01,
-  } fs;
-  enum
-  {
-    ILPS22QS_ONE_SHOT = 0x00, /* Device in power down till software trigger */
-    ILPS22QS_1Hz      = 0x01,
-    ILPS22QS_4Hz      = 0x02,
-    ILPS22QS_10Hz     = 0x03,
-    ILPS22QS_25Hz     = 0x04,
-    ILPS22QS_50Hz     = 0x05,
-    ILPS22QS_75Hz     = 0x06,
-    ILPS22QS_100Hz    = 0x07,
-    ILPS22QS_200Hz    = 0x08,
-  } odr;
-  enum
-  {
-    ILPS22QS_4_AVG   = 0,
-    ILPS22QS_8_AVG   = 1,
-    ILPS22QS_16_AVG  = 2,
-    ILPS22QS_32_AVG  = 3,
-    ILPS22QS_64_AVG  = 4,
-    ILPS22QS_128_AVG = 5,
-    ILPS22QS_256_AVG = 6,
-    ILPS22QS_512_AVG = 7,
-  } avg;
-  enum
-  {
-    ILPS22QS_LPF_DISABLE   = 0,
-    ILPS22QS_LPF_ODR_DIV_4 = 1,
-    ILPS22QS_LPF_ODR_DIV_9 = 3,
-  } lpf;
+  ilps22qs_fs_t fs;
+  ilps22qs_odr_t odr;
+  ilps22qs_avg_t avg;
+  ilps22qs_lpf_t lpf;
   uint8_t interleaved_mode;
 } ilps22qs_md_t;
 int32_t ilps22qs_mode_set(stmdev_ctx_t *ctx, ilps22qs_md_t *val);
@@ -625,17 +637,19 @@ typedef struct
 int32_t ilps22qs_ah_qvar_data_get(stmdev_ctx_t *ctx,
                                   ilps22qs_ah_qvar_data_t *data);
 
+typedef enum
+{
+  ILPS22QS_BYPASS           = 0,
+  ILPS22QS_FIFO             = 1,
+  ILPS22QS_STREAM           = 2,
+  ILPS22QS_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
+  ILPS22QS_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
+  ILPS22QS_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
+} ilps22qs_operation_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS22QS_BYPASS           = 0,
-    ILPS22QS_FIFO             = 1,
-    ILPS22QS_STREAM           = 2,
-    ILPS22QS_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
-    ILPS22QS_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
-    ILPS22QS_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
-  } operation;
+  ilps22qs_operation_t operation;
   uint8_t watermark : 7; /* (0 disable) max 128.*/
 } ilps22qs_fifo_md_t;
 int32_t ilps22qs_fifo_mode_set(stmdev_ctx_t *ctx, ilps22qs_fifo_md_t *val);
@@ -678,14 +692,16 @@ int32_t ilps22qs_int_on_threshold_mode_set(stmdev_ctx_t *ctx,
 int32_t ilps22qs_int_on_threshold_mode_get(stmdev_ctx_t *ctx,
                                            ilps22qs_int_th_md_t *val);
 
+typedef enum
+{
+  ILPS22QS_OUT_AND_INTERRUPT = 0,
+  ILPS22QS_ONLY_INTERRUPT    = 1,
+  ILPS22QS_RST_REFS          = 2,
+} ilps22qs_apply_ref_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS22QS_OUT_AND_INTERRUPT = 0,
-    ILPS22QS_ONLY_INTERRUPT    = 1,
-    ILPS22QS_RST_REFS          = 2,
-  } apply_ref;
+  ilps22qs_apply_ref_t apply_ref;
   uint8_t get_ref : 1; /* Use current pressure value as reference */
 } ilps22qs_ref_md_t;
 int32_t ilps22qs_reference_mode_set(stmdev_ctx_t *ctx,
