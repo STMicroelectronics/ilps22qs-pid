@@ -70,7 +70,7 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
 <label for="collapse-section4" aria-hidden="true">V2.1.1 / 26-July-2023</label>
 <div>
 
@@ -81,6 +81,19 @@ This directory contains the ILPS22QS component drivers.
 ##
 
 </div>
+
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true">
+<label for="collapse-section5" aria-hidden="true">V2.2.0 / 09-Nov-2023</label>
+<div>
+
+## Main changes
+
+- moved all enum outside of struct to be C++ compliant
+
+##
+
+</div>
+
 :::
 
 :::
