@@ -51,7 +51,10 @@ int32_t __weak ilps22qs_read_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t *
 {
   int32_t ret;
 
-  if (ctx == NULL) return -1;
+  if (ctx == NULL)
+  {
+    return -1;
+  }
 
   ret = ctx->read_reg(ctx->handle, reg, data, len);
 
@@ -73,7 +76,10 @@ int32_t __weak ilps22qs_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t 
 {
   int32_t ret;
 
-  if (ctx == NULL) return -1;
+  if (ctx == NULL)
+  {
+    return -1;
+  }
 
   ret = ctx->write_reg(ctx->handle, reg, data, len);
 
@@ -732,6 +738,29 @@ int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
       /* data is a pressure sample */
       switch (md->fs)
       {
+        case ILPS22QS_1260hPa:
+          data->pressure.hpa = ilps22qs_from_fs1260_to_hPa(data->pressure.raw);
+          break;
+        case ILPS22QS_4060hPa:
+          data->pressure.hpa = ilps22qs_from_fs4000_to_hPa(data->pressure.raw);
+          break;
+        default:
+          data->pressure.hpa = 0.0f;
+          break;
+      }
+      data->ah_qvar.lsb = 0;
+    }
+    else
+    {
+      /* data is a AH_QVAR sample */
+      data->ah_qvar.lsb = (data->pressure.raw / 256); /* shift 8bit left */
+      data->pressure.hpa = 0.0f;
+    }
+  }
+  else
+  {
+    switch (md->fs)
+    {
       case ILPS22QS_1260hPa:
         data->pressure.hpa = ilps22qs_from_fs1260_to_hPa(data->pressure.raw);
         break;
@@ -741,25 +770,6 @@ int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
       default:
         data->pressure.hpa = 0.0f;
         break;
-      }
-      data->ah_qvar.lsb = 0;
-    } else {
-      /* data is a AH_QVAR sample */
-      data->ah_qvar.lsb = (data->pressure.raw / 256); /* shift 8bit left */
-      data->pressure.hpa = 0.0f;
-    }
-  } else {
-    switch (md->fs)
-    {
-    case ILPS22QS_1260hPa:
-      data->pressure.hpa = ilps22qs_from_fs1260_to_hPa(data->pressure.raw);
-      break;
-    case ILPS22QS_4060hPa:
-      data->pressure.hpa = ilps22qs_from_fs4000_to_hPa(data->pressure.raw);
-      break;
-    default:
-      data->pressure.hpa = 0.0f;
-      break;
     }
     data->ah_qvar.lsb = 0;
   }
@@ -973,25 +983,29 @@ int32_t ilps22qs_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
             break;
         }
         data[i].lsb = 0;
-      } else {
+      }
+      else
+      {
         /* data is a AH_QVAR sample */
         data[i].lsb = (data[i].raw / 256); /* shift 8bit left */
         data[i].hpa = 0.0f;
       }
-    } else {
-        switch (md->fs)
-        {
-          case ILPS22QS_1260hPa:
-            data[i].hpa = ilps22qs_from_fs1260_to_hPa(data[i].raw);
-            break;
-          case ILPS22QS_4060hPa:
-            data[i].hpa = ilps22qs_from_fs4000_to_hPa(data[i].raw);
-            break;
-          default:
-            data[i].hpa = 0.0f;
-            break;
-        }
-        data[i].lsb = 0;
+    }
+    else
+    {
+      switch (md->fs)
+      {
+        case ILPS22QS_1260hPa:
+          data[i].hpa = ilps22qs_from_fs1260_to_hPa(data[i].raw);
+          break;
+        case ILPS22QS_4060hPa:
+          data[i].hpa = ilps22qs_from_fs4000_to_hPa(data[i].raw);
+          break;
+        default:
+          data[i].hpa = 0.0f;
+          break;
+      }
+      data[i].lsb = 0;
     }
 
   }
