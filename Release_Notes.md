@@ -82,7 +82,7 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section5" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section5" aria-hidden="true">
 <label for="collapse-section5" aria-hidden="true">V2.2.0 / 09-Nov-2023</label>
 <div>
 
@@ -94,6 +94,18 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
+<input type="checkbox" id="collapse-section6" checked aria-hidden="true">
+<label for="collapse-section6" aria-hidden="true">V3.0.0 / 19-Mar-2024</label>
+<div>
+
+## Main changes
+
+- Fixed code style (Artistic Style Version 3.4.13)
+- Add "const" to ctx arg for all APIs
+
+##
+
+</div>
 :::
 
 :::
