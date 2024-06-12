@@ -496,9 +496,8 @@ int32_t ilps22qs_id_get(const stmdev_ctx_t *ctx, ilps22qs_id_t *val);
 
 typedef enum
 {
-  ILPS22QS_SEL_BY_HW      = 0x00, /* bus mode select by HW (SPI 3W disable) */
-  ILPS22QS_SPI_3W         = 0x03, /* bus mode select by HW (SPI 3W disable) */
-  ILPS22QS_SPI_4W         = 0x02, /* bus mode select by HW (SPI 3W disable) */
+  ILPS22QS_SEL_BY_HW = 0x00, /* bus mode select by HW (SPI 3W disable) */
+  ILPS22QS_SPI_3W    = 0x03, /* bus mode select by HW (SPI 3W enable) */
 } ilps22qs_interface_t;
 
 typedef enum
