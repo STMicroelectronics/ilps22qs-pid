@@ -233,9 +233,6 @@ int32_t ilps22qs_bus_mode_get(const stmdev_ctx_t *ctx, ilps22qs_bus_mode_t *val)
       case ILPS22QS_SPI_3W:
         val->interface = ILPS22QS_SPI_3W;
         break;
-      case ILPS22QS_SPI_4W:
-        val->interface = ILPS22QS_SPI_4W;
-        break;
       default:
         val->interface = ILPS22QS_SEL_BY_HW;
         break;
@@ -713,7 +710,7 @@ int32_t ilps22qs_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   *
   * @param  ctx   communication interface handler.(ptr)
   * @param  md    the sensor conversion parameters.(ptr)
-  * @param  data  data retrived from the sensor.(ptr)
+  * @param  data  data retrieved from the sensor.(ptr)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
@@ -787,7 +784,7 @@ int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
   *
   * @param  ctx   communication interface handler.(ptr)
   * @param  md    the sensor conversion parameters.(ptr)
-  * @param  data  data retrived from the sensor.(ptr)
+  * @param  data  data retrieved from the sensor.(ptr)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
@@ -946,7 +943,7 @@ int32_t ilps22qs_fifo_level_get(const stmdev_ctx_t *ctx, uint8_t *val)
   * @param  md    the sensor conversion parameters.(ptr)
   * @param  fmd   get the FIFO operation mode.(ptr)
   * @param  samp  number of samples stored in FIFO.(ptr)
-  * @param  data  data retrived from FIFO.(ptr)
+  * @param  data  data retrieved from FIFO.(ptr)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
