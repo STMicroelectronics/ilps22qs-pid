@@ -780,6 +780,48 @@ int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
 }
 
 /**
+  * @brief  Pressure output value.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  buff     buffer that stores data read
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps22qs_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff)
+{
+  int32_t ret;
+  uint8_t reg[3];
+
+  ret =  ilps22qs_read_reg(ctx, ILPS22QS_PRESS_OUT_XL, reg, 3);
+  *buff = reg[2];
+  *buff = (*buff * 256U) + reg[1];
+  *buff = (*buff * 256U) + reg[0];
+  *buff *= 256U;
+
+  return ret;
+}
+
+/**
+  * @brief  Temperature output value.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  buff     buffer that stores data read
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps22qs_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
+{
+  int32_t ret;
+  uint8_t reg[2];
+
+  ret =  ilps22qs_read_reg(ctx, ILPS22QS_TEMP_OUT_L, reg, 2);
+  *buff = (int16_t)reg[1];
+  *buff = (*buff * 256) + (int16_t)reg[0];
+
+  return ret;
+}
+
+/**
   * @brief  AH/QVAR data read.[get]
   *
   * @param  ctx   communication interface handler.(ptr)

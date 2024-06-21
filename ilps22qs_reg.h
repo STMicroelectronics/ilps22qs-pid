@@ -627,6 +627,10 @@ typedef struct
 } ilps22qs_data_t;
 int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
                           ilps22qs_data_t *data);
+
+int32_t ilps22qs_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff);
+int32_t ilps22qs_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff);
+
 typedef struct
 {
   float_t mv; /* value converted in mV */
