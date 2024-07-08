@@ -266,7 +266,9 @@ int32_t ilps22qs_init_set(const stmdev_ctx_t *ctx, ilps22qs_init_t val)
 {
   ilps22qs_ctrl_reg2_t ctrl_reg2;
   ilps22qs_ctrl_reg3_t ctrl_reg3;
-  uint8_t reg[2];
+  ilps22qs_int_source_t int_src;
+  ilps22qs_stat_t status;
+  uint8_t reg[2], cnt = 0;
   int32_t ret;
 
   ret = ilps22qs_read_reg(ctx, ILPS22QS_CTRL_REG2, reg, 2);
@@ -281,11 +283,71 @@ int32_t ilps22qs_init_set(const stmdev_ctx_t *ctx, ilps22qs_init_t val)
         ctrl_reg2.boot = PROPERTY_ENABLE;
         ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG2,
                                  (uint8_t *)&ctrl_reg2, 1);
+        if (ret != 0)
+        {
+          break;
+        }
+
+        do
+        {
+          ret = ilps22qs_read_reg(ctx, ILPS22QS_INT_SOURCE, (uint8_t *)&int_src, 1);
+          if (ret != 0)
+          {
+            break;
+          }
+
+          /* boot procedue ended correctly */
+          if (int_src.boot_on == 0U)
+          {
+            break;
+          }
+
+          if (ctx->mdelay != NULL)
+          {
+            ctx->mdelay(10); /* 10ms of boot time */
+          }
+        } while (cnt++ < 5U);
+
+        if (cnt >= 5U)
+        {
+          ret = -1;  /* boot procedure failed */
+        }
+
         break;
       case ILPS22QS_RESET:
         ctrl_reg2.swreset = PROPERTY_ENABLE;
         ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG2,
                                  (uint8_t *)&ctrl_reg2, 1);
+        if (ret != 0)
+        {
+          break;
+        }
+
+        do
+        {
+          ret = ilps22qs_status_get(ctx, &status);
+          if (ret != 0)
+          {
+            break;
+          }
+
+          /* sw-reset procedue ended correctly */
+          if (status.sw_reset == 0U)
+          {
+            break;
+          }
+
+          if (ctx->mdelay != NULL)
+          {
+            ctx->mdelay(1); /* should be 50 us */
+          }
+        } while (cnt++ < 5U);
+
+        if (cnt >= 5U)
+        {
+          ret = -1;  /* sw-reset procedure failed */
+        }
+
         break;
       case ILPS22QS_DRV_RDY:
         ctrl_reg2.bdu = PROPERTY_ENABLE;
