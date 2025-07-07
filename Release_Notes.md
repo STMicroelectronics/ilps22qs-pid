@@ -121,7 +121,7 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section8" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section8" aria-hidden="true">
 <label for="collapse-section8" aria-hidden="true">V3.1.1 / 03-Oct-2024</label>
 <div>
 
@@ -130,6 +130,19 @@ This directory contains the ILPS22QS component drivers.
 - Fixed few typos
 - Review few names and alignments
 - Align reset and boot to Application Note
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section9" checked aria-hidden="true">
+<label for="collapse-section9" aria-hidden="true">V3.2.0 / 07-Jul-2025</label>
+<div>
+
+## Main changes
+
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
 
 ##
 
