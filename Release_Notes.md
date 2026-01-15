@@ -148,7 +148,7 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section10" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section10" aria-hidden="true">
 <label for="collapse-section10" aria-hidden="true">V4.0.0 / 07-Oct-2025</label>
 <div>
 
@@ -159,6 +159,18 @@ This directory contains the ILPS22QS component drivers.
 - Added checks before writes to avoid random content from being written
 - Changed fifo_mode API
 - Adding CODE_OF_CONDUCT.md and SECURITY.md
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
+<label for="collapse-section11" aria-hidden="true">V4.0.1 / 15-Jan-2026</label>
+<div>
+
+## Main changes
+
+- Fix I2C operation in reference_mode_set API
 
 ##
 
