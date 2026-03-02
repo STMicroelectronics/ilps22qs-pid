@@ -17,7 +17,6 @@
   */
 
 #include "ilps22qs_reg.h"
-#include <assert.h>
 
 /**
   * @defgroup    ILPS22QS
@@ -1050,7 +1049,11 @@ int32_t ilps22qs_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   ilps22qs_fifo_wtm_t fifo_wtm;
   int32_t ret;
 
-  assert(val < 128);
+  if (val >= 128)
+  {
+    ret = -1;
+    goto exit;
+  }
 
   ret = ilps22qs_read_reg(ctx, ILPS22QS_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
@@ -1059,6 +1062,8 @@ int32_t ilps22qs_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 
     ret = ilps22qs_write_reg(ctx, ILPS22QS_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
+
+exit:
   return ret;
 }
 
