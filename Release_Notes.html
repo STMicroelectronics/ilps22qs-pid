@@ -48,56 +48,64 @@ license</a></p>
 <section id="update-history" class="col-sm-12 col-lg-8">
 <h1>Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" aria-hidden="true">
-<label for="collapse-section1" aria-hidden="true">V1.0.0 /
-30-March-2022</label>
+<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
+<label for="collapse-section11" aria-hidden="true">V4.0.1 /
+15-Jan-2026</label>
 <div>
 <h2 id="main-changes">Main changes</h2>
-<h3 id="first-release">First release</h3>
 <ul>
-<li>First official release [ref. DS v2.0]</li>
+<li>Fix I2C operation in reference_mode_set API</li>
 </ul>
 <h2 id="section"></h2>
 </div>
-<input type="checkbox" id="collapse-section2" aria-hidden="true">
-<label for="collapse-section2" aria-hidden="true">V2.0.0 /
-1-March-2023</label>
+<input type="checkbox" id="collapse-section10" aria-hidden="true">
+<label for="collapse-section10" aria-hidden="true">V4.0.0 /
+07-Oct-2025</label>
 <div>
 <h2 id="main-changes-1">Main changes</h2>
 <ul>
-<li>Align driver to DS v3.0 (support interleaved mode)</li>
+<li>Fix driver formatting options</li>
+<li>Added pointer to private data in stmdev_ctx_t</li>
+<li>Added checks before writes to avoid random content from being
+written</li>
+<li>Changed fifo_mode API</li>
+<li>Adding CODE_OF_CONDUCT.md and SECURITY.md</li>
 </ul>
 <h2 id="section-1"></h2>
 </div>
-<input type="checkbox" id="collapse-section3" aria-hidden="true">
-<label for="collapse-section3" aria-hidden="true">V2.1.0 /
-01-June-2023</label>
+<input type="checkbox" id="collapse-section9" aria-hidden="true">
+<label for="collapse-section9" aria-hidden="true">V3.2.0 /
+07-Jul-2025</label>
 <div>
 <h2 id="main-changes-2">Main changes</h2>
 <ul>
-<li>Fix MISRA errors</li>
-<li>ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name</li>
-<li>ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs</li>
+<li>Fix driver formatting options</li>
+<li>Added pointer to private data in stmdev_ctx_t</li>
 </ul>
 <h2 id="section-2"></h2>
 </div>
-<input type="checkbox" id="collapse-section4" aria-hidden="true">
-<label for="collapse-section4" aria-hidden="true">V2.1.1 /
-26-July-2023</label>
+<input type="checkbox" id="collapse-section8" aria-hidden="true">
+<label for="collapse-section8" aria-hidden="true">V3.1.1 /
+03-Oct-2024</label>
 <div>
 <h2 id="main-changes-3">Main changes</h2>
 <ul>
-<li>ah_qvar: Add API to convert from LSB to mV</li>
+<li>Fixed few typos</li>
+<li>Review few names and alignments</li>
+<li>Align reset and boot to Application Note</li>
 </ul>
 <h2 id="section-3"></h2>
 </div>
-<input type="checkbox" id="collapse-section5" aria-hidden="true">
-<label for="collapse-section5" aria-hidden="true">V2.2.0 /
-09-Nov-2023</label>
+<input type="checkbox" id="collapse-section7" aria-hidden="true">
+<label for="collapse-section7" aria-hidden="true">V3.1.0 /
+19-Jun-2024</label>
 <div>
 <h2 id="main-changes-4">Main changes</h2>
 <ul>
-<li>moved all enum outside of struct to be C++ compliant</li>
+<li>Added separate raw_get APIs for press and temp</li>
+<li>Fix ILPS22QS driver</li>
+<li>updated README.md file with tag reference and mdelay
+description</li>
 </ul>
 <h2 id="section-4"></h2>
 </div>
@@ -112,64 +120,56 @@ license</a></p>
 </ul>
 <h2 id="section-5"></h2>
 </div>
-<input type="checkbox" id="collapse-section7" aria-hidden="true">
-<label for="collapse-section7" aria-hidden="true">V3.1.0 /
-19-Jun-2024</label>
+<input type="checkbox" id="collapse-section5" aria-hidden="true">
+<label for="collapse-section5" aria-hidden="true">V2.2.0 /
+09-Nov-2023</label>
 <div>
 <h2 id="main-changes-6">Main changes</h2>
 <ul>
-<li>Added separate raw_get APIs for press and temp</li>
-<li>Fix ILPS22QS driver</li>
-<li>updated README.md file with tag reference and mdelay
-description</li>
+<li>moved all enum outside of struct to be C++ compliant</li>
 </ul>
 <h2 id="section-6"></h2>
 </div>
-<input type="checkbox" id="collapse-section8" aria-hidden="true">
-<label for="collapse-section8" aria-hidden="true">V3.1.1 /
-03-Oct-2024</label>
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V2.1.1 /
+26-July-2023</label>
 <div>
 <h2 id="main-changes-7">Main changes</h2>
 <ul>
-<li>Fixed few typos</li>
-<li>Review few names and alignments</li>
-<li>Align reset and boot to Application Note</li>
+<li>ah_qvar: Add API to convert from LSB to mV</li>
 </ul>
 <h2 id="section-7"></h2>
 </div>
-<input type="checkbox" id="collapse-section9" aria-hidden="true">
-<label for="collapse-section9" aria-hidden="true">V3.2.0 /
-07-Jul-2025</label>
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
+<label for="collapse-section3" aria-hidden="true">V2.1.0 /
+01-June-2023</label>
 <div>
 <h2 id="main-changes-8">Main changes</h2>
 <ul>
-<li>Fix driver formatting options</li>
-<li>Added pointer to private data in stmdev_ctx_t</li>
+<li>Fix MISRA errors</li>
+<li>ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name</li>
+<li>ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs</li>
 </ul>
 <h2 id="section-8"></h2>
 </div>
-<input type="checkbox" id="collapse-section10" aria-hidden="true">
-<label for="collapse-section10" aria-hidden="true">V4.0.0 /
-07-Oct-2025</label>
+<input type="checkbox" id="collapse-section2" aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V2.0.0 /
+1-March-2023</label>
 <div>
 <h2 id="main-changes-9">Main changes</h2>
 <ul>
-<li>Fix driver formatting options</li>
-<li>Added pointer to private data in stmdev_ctx_t</li>
-<li>Added checks before writes to avoid random content from being
-written</li>
-<li>Changed fifo_mode API</li>
-<li>Adding CODE_OF_CONDUCT.md and SECURITY.md</li>
+<li>Align driver to DS v3.0 (support interleaved mode)</li>
 </ul>
 <h2 id="section-9"></h2>
 </div>
-<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
-<label for="collapse-section11" aria-hidden="true">V4.0.1 /
-15-Jan-2026</label>
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
+<label for="collapse-section1" aria-hidden="true">V1.0.0 /
+30-March-2022</label>
 <div>
 <h2 id="main-changes-10">Main changes</h2>
+<h3 id="first-release">First release</h3>
 <ul>
-<li>Fix I2C operation in reference_mode_set API</li>
+<li>First official release [ref. DS v2.0]</li>
 </ul>
 <h2 id="section-10"></h2>
 </div>

@@ -30,92 +30,41 @@ This directory contains the ILPS22QS component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section1" aria-hidden="true">
-<label for="collapse-section1" aria-hidden="true">V1.0.0 / 30-March-2022</label>
+<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
+<label for="collapse-section11" aria-hidden="true">V4.0.1 / 15-Jan-2026</label>
 <div>
 
 ## Main changes
 
-### First release
+- Fix I2C operation in reference_mode_set API
 
-- First official release [ref. DS v2.0]
+##
+
+</div>
+<input type="checkbox" id="collapse-section10" aria-hidden="true">
+<label for="collapse-section10" aria-hidden="true">V4.0.0 / 07-Oct-2025</label>
+<div>
+
+## Main changes
+
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
+- Added checks before writes to avoid random content from being written
+- Changed fifo_mode API
+- Adding CODE_OF_CONDUCT.md and SECURITY.md
 
 ##
 
 </div>
 
-<input type="checkbox" id="collapse-section2" aria-hidden="true">
-<label for="collapse-section2" aria-hidden="true">V2.0.0 / 1-March-2023</label>
+<input type="checkbox" id="collapse-section9" aria-hidden="true">
+<label for="collapse-section9" aria-hidden="true">V3.2.0 / 07-Jul-2025</label>
 <div>
 
 ## Main changes
 
-- Align driver to DS v3.0 (support interleaved mode)
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section3" aria-hidden="true">
-<label for="collapse-section3" aria-hidden="true">V2.1.0 / 01-June-2023</label>
-<div>
-
-## Main changes
-
-- Fix MISRA errors
-- ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name
-- ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section4" aria-hidden="true">
-<label for="collapse-section4" aria-hidden="true">V2.1.1 / 26-July-2023</label>
-<div>
-
-## Main changes
-
-- ah_qvar: Add API to convert from LSB to mV
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section5" aria-hidden="true">
-<label for="collapse-section5" aria-hidden="true">V2.2.0 / 09-Nov-2023</label>
-<div>
-
-## Main changes
-
-- moved all enum outside of struct to be C++ compliant
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section6" aria-hidden="true">
-<label for="collapse-section6" aria-hidden="true">V3.0.0 / 19-Mar-2024</label>
-<div>
-
-## Main changes
-
-- Fixed code style (Artistic Style Version 3.4.13)
-- Add "const" to ctx arg for all APIs
-
-##
-
-</div>
-
-<input type="checkbox" id="collapse-section7" aria-hidden="true">
-<label for="collapse-section7" aria-hidden="true">V3.1.0 / 19-Jun-2024</label>
-<div>
-
-## Main changes
-
-- Added separate raw_get APIs for press and temp
-- Fix ILPS22QS driver
-- updated README.md file with tag reference and mdelay description
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
 
 ##
 
@@ -135,46 +84,97 @@ This directory contains the ILPS22QS component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section9" aria-hidden="true">
-<label for="collapse-section9" aria-hidden="true">V3.2.0 / 07-Jul-2025</label>
+<input type="checkbox" id="collapse-section7" aria-hidden="true">
+<label for="collapse-section7" aria-hidden="true">V3.1.0 / 19-Jun-2024</label>
 <div>
 
 ## Main changes
 
-- Fix driver formatting options
-- Added pointer to private data in stmdev_ctx_t
+- Added separate raw_get APIs for press and temp
+- Fix ILPS22QS driver
+- updated README.md file with tag reference and mdelay description
 
 ##
 
 </div>
 
-<input type="checkbox" id="collapse-section10" aria-hidden="true">
-<label for="collapse-section10" aria-hidden="true">V4.0.0 / 07-Oct-2025</label>
+<input type="checkbox" id="collapse-section6" aria-hidden="true">
+<label for="collapse-section6" aria-hidden="true">V3.0.0 / 19-Mar-2024</label>
 <div>
 
 ## Main changes
 
-- Fix driver formatting options
-- Added pointer to private data in stmdev_ctx_t
-- Added checks before writes to avoid random content from being written
-- Changed fifo_mode API
-- Adding CODE_OF_CONDUCT.md and SECURITY.md
+- Fixed code style (Artistic Style Version 3.4.13)
+- Add "const" to ctx arg for all APIs
 
 ##
 
 </div>
 
-<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
-<label for="collapse-section11" aria-hidden="true">V4.0.1 / 15-Jan-2026</label>
+<input type="checkbox" id="collapse-section5" aria-hidden="true">
+<label for="collapse-section5" aria-hidden="true">V2.2.0 / 09-Nov-2023</label>
 <div>
 
 ## Main changes
 
-- Fix I2C operation in reference_mode_set API
+- moved all enum outside of struct to be C++ compliant
 
 ##
 
 </div>
+
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V2.1.1 / 26-July-2023</label>
+<div>
+
+## Main changes
+
+- ah_qvar: Add API to convert from LSB to mV
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
+<label for="collapse-section3" aria-hidden="true">V2.1.0 / 01-June-2023</label>
+<div>
+
+## Main changes
+
+- Fix MISRA errors
+- ilps22qs_reg.h: fix ILPS22QS_I3C_IF_CTRL register name
+- ilps22qs_reg.h: fix refp field in REF_P_L and REF_P_H regs
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section2" aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V2.0.0 / 1-March-2023</label>
+<div>
+
+## Main changes
+
+- Align driver to DS v3.0 (support interleaved mode)
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
+<label for="collapse-section1" aria-hidden="true">V1.0.0 / 30-March-2022</label>
+<div>
+
+## Main changes
+
+### First release
+
+- First official release [ref. DS v2.0]
+
+##
+
+</div>
+
 :::
 
 :::
