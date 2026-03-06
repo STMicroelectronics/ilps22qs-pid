@@ -30,7 +30,18 @@ This directory contains the ILPS22QS component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section11" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section12" checked aria-hidden="true">
+<label for="collapse-section12" aria-hidden="true">V4.0.2 / 06-Mar-2026</label>
+<div>
+
+## Main changes
+
+- Replace assert with normal check and return
+
+##
+
+</div>
+<input type="checkbox" id="collapse-section11" aria-hidden="true">
 <label for="collapse-section11" aria-hidden="true">V4.0.1 / 15-Jan-2026</label>
 <div>
 
