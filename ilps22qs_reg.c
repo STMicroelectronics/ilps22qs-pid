@@ -551,37 +551,37 @@ int32_t ilps22qs_mode_set(const stmdev_ctx_t *ctx, ilps22qs_md_t *val)
     if (ctrl_reg3.ah_qvar_en != 0U)
     {
       /* disable QVAR */
-      ah_qvar_en_save = ctrl_reg3.ah_qvar_en;
+      ah_qvar_en_save = ctrl_reg3.ah_qvar_en & 0x01U;
       ctrl_reg3.ah_qvar_en = 0;
       ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
     }
 
     /* set interleaved mode (0 or 1) */
-    ctrl_reg3.ah_qvar_p_auto_en = val->interleaved_mode;
+    ctrl_reg3.ah_qvar_p_auto_en = val->interleaved_mode & 0x01U;
     ret += ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
 
     /* set FIFO interleaved mode (0 or 1) */
     ret += ilps22qs_read_reg(ctx, ILPS22QS_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
-    fifo_ctrl.ah_qvar_p_fifo_en = val->interleaved_mode;
+    fifo_ctrl.ah_qvar_p_fifo_en = val->interleaved_mode & 0x01U;
     ret += ilps22qs_write_reg(ctx, ILPS22QS_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
 
     if (ah_qvar_en_save != 0U)
     {
       /* restore ah_qvar_en back to previous setting */
-      ctrl_reg3.ah_qvar_en = ah_qvar_en_save;
+      ctrl_reg3.ah_qvar_en = ah_qvar_en_save & 0x01U;
     }
 
     if (odr_save != 0U)
     {
       /* restore odr back to previous setting */
-      ctrl_reg1.odr = odr_save;
+      ctrl_reg1.odr = odr_save & 0x0FU;
     }
 
-    ctrl_reg1.odr = (uint8_t)val->odr;
-    ctrl_reg1.avg = (uint8_t)val->avg;
+    ctrl_reg1.odr = (uint8_t)val->odr & 0x0FU;
+    ctrl_reg1.avg = (uint8_t)val->avg & 0x07U;
     ctrl_reg2.en_lpfp = (uint8_t)val->lpf & 0x01U;
     ctrl_reg2.lfpf_cfg = ((uint8_t)val->lpf & 0x02U) >> 2;
-    ctrl_reg2.fs_mode = (uint8_t)val->fs;
+    ctrl_reg2.fs_mode = (uint8_t)val->fs & 0x01U;
 
     bytecpy(&reg[0], (uint8_t *)&ctrl_reg1);
     bytecpy(&reg[1], (uint8_t *)&ctrl_reg2);
@@ -756,7 +756,7 @@ int32_t ilps22qs_ah_qvar_en_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg3.ah_qvar_en = val;
+    ctrl_reg3.ah_qvar_en = val & 0x01U;
     ret = ilps22qs_write_reg(ctx, ILPS22QS_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -859,8 +859,7 @@ int32_t ilps22qs_data_get(const stmdev_ctx_t *ctx, ilps22qs_md_t *md,
 
 
   /* temperature conversion */
-  data->heat.raw = (int16_t)buff[4];
-  data->heat.raw = (data->heat.raw * 256) + (int16_t) buff[3];
+  data->heat.raw = (int16_t)(buff[3] | ((uint16_t)buff[4] << 8));
   data->heat.deg_c = ilps22qs_from_lsb_to_celsius(data->heat.raw);
 
   return ret;
@@ -912,8 +911,7 @@ int32_t ilps22qs_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
     return ret;
   }
 
-  *buff = (int16_t)reg[1];
-  *buff = (*buff * 256) + (int16_t)reg[0];
+  *buff = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
@@ -1058,7 +1056,7 @@ int32_t ilps22qs_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   ret = ilps22qs_read_reg(ctx, ILPS22QS_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
   {
-    fifo_wtm.wtm = val & 0x7F;
+    fifo_wtm.wtm = val & 0x7FU;
 
     ret = ilps22qs_write_reg(ctx, ILPS22QS_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
@@ -1353,7 +1351,7 @@ int32_t ilps22qs_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
 
     interrupt_cfg.phe = val->over_th;
     interrupt_cfg.ple = val->under_th;
-    ths_p_h.ths = (uint8_t)(val->threshold / 256U);
+    ths_p_h.ths = (uint8_t)(val->threshold / 256U) & 0x7FU;
     ths_p_l.ths = (uint8_t)(val->threshold - (ths_p_h.ths * 256U));
 
     bytecpy(&reg[0], (uint8_t *)&interrupt_cfg);
@@ -1395,8 +1393,8 @@ int32_t ilps22qs_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
 
   val->over_th = interrupt_cfg.phe;
   val->under_th = interrupt_cfg.ple;
-  val->threshold = ths_p_h.ths;
-  val->threshold = (val->threshold * 256U)  + ths_p_l.ths;
+  val->threshold = (uint16_t)(ths_p_l.ths
+                              | ((uint16_t)ths_p_h.ths << 8));
 
   return ret;
 }
@@ -1525,8 +1523,7 @@ int32_t ilps22qs_opc_get(const stmdev_ctx_t *ctx, int16_t *val)
     return ret;
   }
 
-  *val = (int16_t)reg[1];
-  *val = *val * 256 + (int16_t)reg[0];
+  *val = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
